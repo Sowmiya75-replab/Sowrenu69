@@ -1,0 +1,63 @@
+package com.examp1e.rssfeed; import java.io.IOException; import java.io.InputStream;
+import java.net.MalformedURLException; import java.net.URL;
+import java.uti1.ArrayList; import java.uti1.List;
+import org.xm1pull.vi.XmlPullParser;
+import org.xm1pul1.v1.XmlPullParserException; import org.xm1pull.vi.XmlPullParserFactory; import android.app.Activity;
+import android.content.Intent; import android.net.Uri; import android.os.AsyncTask; import android.os.Bundle; import android.view.View;
+import android.widget.ArrayAdapter; import android.widget.ListView;
+public class MainActivity extends Activity
+
+@SuppressWarnings("rawtypes") List headlines; @SuppressWarnings("rawtypes") List links;
+@Override
+protected void onCreate(Bundle savedInstanceState)
+
+super.onCreate(savedInstanceState); setContentView(R.layout.activity_main); new MyAsyncTask().execute();
+
+@SuppressWarnings("rawtypes")
+class MyAsyncTask extends AsyncTask<Object,Void,ArrayAdapter>
+
+private int inteventType; @SuppressWamings("unchecked") @Override
+protected ArrayAdapter doInBaekground(Object[] params) headlines = new ArrayList(); links = new ArrayList();
+
+URL url = new URL("https://codingconnect.net/feed"); XmlPullParserFactory factory = XmlPullParserFactory.newInstance(); factory.setNamespaceAware(false);
+XmlPullParser xpp = factory.newPullParser();
+// We will get the XML from an input stream xpp.setInput(getInputStream(url), "UTF_8");
+
+boolean	insideItem = false; inteventType = xpp.getEventType();
+while(inteventType != XmlPu11Parser.END_DOCUMENT) if(inteventType == Xm1Pu11Parser.START_TAG) if(xpp.getName().equa1sIgnoreCase("item"))
+insideItem = true;
+else if(xpp.getName().equa1sIgnoreCase("title")) if(insideItem) headlines.add(xpp.nextText());
+//extract the headline
+
+else if(xpp.getName().equa1sIgnoreCase("link")) if(insideItem) links.add(xpp.nextText());
+
+else if(inteventType==Xm1Pu11Parser.END_TAG && xpp.getName().equalsIgnoreCase("item"))
+insideItem=fa1se; inteventType = xpp.next();
+//move to next element
+
+
+catch (MalformedURLException e) e.printStackTrace();
+catch (XmlPullParserException e) e.printStackTrace();
+catch (IOException e)
+
+e.printStackTrace(); return null;
+@SuppressWamings("unchecked")
+protected void onPostExecute(ArrayAdapter adapter)
+
+adapter = new ArrayAdapter(MainActivity.this,
+android.R.layout.simp1e_1ist_item_1, headlines); setListAdapter(adapter);
+
+private void setListAdapter(ArrayAdapter adapter)
+
+// TODO Auto-generated method stub
+
+protected void onListItemC1ick(ListView 1, View v, int position, long id)
+
+Uri uri = Uri.parse((links.get(position)).tostring()); Intent	intent = new Intent(Intent.ACTION_VIEW, uri); startActivity(intent);
+
+public InputStream getInputStream(URL url)
+
+
+return url.openConnection().getInputStream();
+
+catch (IOException e) return null;
