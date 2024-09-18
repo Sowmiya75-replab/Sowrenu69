@@ -1,0 +1,115 @@
+package com.examp1e.databases; import android.app.Activity;
+import android.app.A1ertDia1og.Builder; import android.content.Context;
+import android.database.Cursor;
+import android.database.sq1ite.SQLiteDatabase; import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener; import android.widget.Button;
+import android.widget.EditText;
+public class MainActivity extends Activity
+
+EditText name,regno,mark;
+Button btnAdd,btnDe1ete,btnUpdate,btnView,btnViewAll; SQLiteDatabase db;
+@Override
+protected void onCreate(Bundle savedInstanceState)
+
+super.onCreate(savedInstanceState); setContentView(R.layout.activity main);
+regno= (EditText)findViewById(R.id.editTextl); name=(EditText)findViewById(R.id.editText2); mark=(EditText)findViewById(R.id.editText3); btnAdd=(Button)findViewById(R.id.buttonl); btnView = (Button)findViewById(R.id.button2); btnViewAll=(Button)findViewById(R.id.button3); btnUpdate= (Button)findViewById(R.id.button4); btnDelete= (Button)findViewById(R.id.button5);
+db=openOrCreateDatabase("StudentDB", Context.MODE_PRIVATE, null); db.execSQL("CREATE TABLE IF NOT EXISTS student(regno VARCHAR,
+name VARCHR, mark VARCHAR)"); btnAdd.setOnC1ickListener(new OnClickListener()
+
+@Override
+public void onC1ick(View view)
+
+// TODO Auto-generated method stub
+// Checking for empty fields if(regno.getText().toString().trim().length()==0||name.getText(). toString().trim().
+length()==0||mark.getText().toString().trim().length()	0)
+
+showMessage("Error", ”Please enter all values"); return;
+
+db.execSQL("INSERT INTO student VALUES”+regno.getText()
++""+name.getText()+""+mark.getText()+"");
+showMessage("Success", "Record added"); clearText();
+
+// Deleting a record from the Student table btnDelete.setOnC1ickListener(new OnClickListener()
+public void onClick(View view)
+
+// TODO Auto-generated method stub
+
+if(regno.getText().toString().trim().length()==0)
+
+showMessage("Error", "Please enter Reg. No.");
+
+return;
+
+Cursor c=db.rawQuery("SELECT * FROM student
+WHERE regno="+regno.getText()+"", null);
+if(c.moveToFirst())
+
+db.execSQL("DELETE FROM student WHERE regno=
+"+regno.getText()+""); showMessage("Success", ”Record Deleted");
+
+else
+
+showMessage("Error", "Invalid Reg. No."); clearText();
+
+// Updating a record in the Student table btnUpdate.setOnC1ickListener(new OnClickListener()
+
+public void onC1ick(View view)
+
+// TODO Auto-generated method stub if(regno.getText().toString().trim().length()==0)
+
+showMessage("Error", "Please enter Reg. No."); return;
+
+Cursor c=db.rawQuery("SELECT * FROM student WHERE
+regno=" +regno.getText()+"”, null);
+if(c.moveToFirst())
+
+db.execSQL("UPDATE student SET name="+name.getText()+"");
+
+showMessage("Success", "Record Modified"); else
+showMessage("Error", "Invalid Reg. No."); clearText();
+
+// Display a record from the Student table btnView.setOnC1ickListener(new OnClickListener()
+
+@Override
+public void onC1ick(View view)
+
+// TODO Auto-generated method stub if(regno.getText().toString().trim().length()==0)
+
+showMessage("Error", "Please enter Reg. No."); return;
+
+Cursor c=db.rawQuery("SELECT * FROM student WHERE
+regno=” +regno.getText()+”", null);
+if(c.moveToFirst())
+
+name.setText(c.getString(1)); mark.setText(c.getString(2));
+} else
+
+showMessage("Error", "Invalid Reg. No.”); clearText();
+
+
+// Displaying all the records btnViewAll.setOnC1ickListener(new OnClickListener()
+
+@Override
+public void onClick(View view)
+
+// TODO Auto-generated method stub
+Cursor c=db.rawQuery("SELECT * FROM student", null); if(c.getCount()==0)
+
+showMessage("Error", "No records found"); return;
+
+StringBuffer buffe	ew StringBuffer(); while(c.moveToNext())
+buffer.append("Reg. No : "+c.getString(0)+"\n"); buffer.append(”Name : ”+c.getString(1)+"\n"); buffer.append(”Mark: "+c.getString(2)+”\n\n");
+
+showMessage("Student Details", buffer.toString());
+
+public void showMessage(String title, String message)
+
+Builder bui1der=new Builder(this); builder.setCancelab1e(true); builder.setTit1e(title); builder.setMessage(message); builder.show();
+
+public void clearText()
+
+regno.setText("");
+name.setText(”");
+mark.setText(""); regno.requestFocus();
+
