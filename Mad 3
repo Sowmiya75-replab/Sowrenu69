@@ -1,0 +1,42 @@
+package com.example.layout; import android.app.Activity; import android.os.Bundle; import android.view.View; import android.widget.EditText;
+
+import android.widget.ImageButton; import android.widget.Toast;
+
+public class MainActivity extends Activity
+
+
+
+@Override
+
+protected void onCreate(Bundle savedInstanceState)
+
+
+
+super.onCreate(savedInstanceState); setContentView(R.layout.activity_main);
+
+final EditText firstnum=(EditText)findViewById(R.id.textViewl); final EditText secondnum=(EditText)findViewById(R.id.textView2);
+
+ImageButton imgbtn=(ImageButton)findViewById(R.id.imageButtonl); imgbtn.setOnC1ickListener(new View.OnC1ickListener()
+
+
+
+@Override
+
+public void onC1ick(View arg0)
+
+
+
+if(firstnum.getText().toString().isEmpty()||
+
+secondnum.getText().toString().isEmpty());
+
+
+
+int  numl=Integer.parseInt(firstnum.getText().tostring()); int num2=Integer.parseInt(secondnum.getText().tostring());
+
+Toast.makeText(getApplicationContext(), "sum of" + (numl + num2), Toast.LENGTH SHORT).show();
+
+
+
+
+
