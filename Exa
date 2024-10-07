@@ -1,0 +1,2224 @@
+Implement Hierarchical File Organization Techniques
+
+
+
+#include<stdio.> #include<graphics.h> struct tree_element
+
+{
+
+char name[20];
+
+int x,y,ftype,lx,rx,nc,level; struct tree_element *link[5];
+
+};
+
+typedef struct tree_element node; void main()
+
+{
+
+int gd=DETECT,gm; node *root; root=NULL; clrscr(); 
+
+
+
+create(&root,0,"root",0,639,320); clrscr(); initgraph(&gd,&gm,"c:\\tc\\BGI"); display(root);
+
+getch(); closegraph();
+
+}
+
+create(node **root,int lev,char *dname,int lx,int rx,int x)
+
+{
+
+int i,gap; if(*root==NULL)
+
+{
+
+(*root)=(node *)malloc(sizeof(node)); printf("Enter name of dir/file(under %s) : ",dname); fflush(stdin);
+
+gets((*root)->name); printf("enter 1 for Dir/2 for file :"); scanf("%d",&(*root)-
+
+>ftype); (*root)->level=lev; (*root)->y=50+lev*50; (*root)->x=x;
+
+(*root)->lx=lx; (*root)->rx=rx; for(i=0;i<5;i++)
+
+(*root)->link[i]=NULL; if((*root)->ftype==1)
+
+{
+
+printf("No of sub directories/files(for %s):",(*root)-
+
+>name); scanf("%d",&(*root)->nc);
+
+if((*root)->nc==0) gap=rx-lx;
+
+else gap=(rx-lx)/(*root)-
+
+>nc; for(i=0;i<(*root)-
+
+
+
+>nc;i++)
+
+create(&((*root)->link[i]),lev+1,(*root)-
+
+>name,lx+gap*i,lx+gap*i+gap,lx+gap*i+gap/2);
+
+}
+
+else (*root)-
+
+>nc=0;
+
+}
+
+}
+
+display(node *root)
+
+{
+
+int i; settextstyle(2,0,4); settextjustify(1,1); setfillstyle(1,BLUE); setcolor(14); if(root!=NULL)
+
+{
+
+for(i=0;i<root->nc;i++)
+
+{
+
+line(root->x,root->y,root->link[i]->x,root->link[i]->y);
+
+}
+
+if(root->ftype==1) bar3d(root->x-20,root->y- 10,root->x+20,root->y+10,0,0); else
+
+
+
+fillellipse(root->x,root->y,20,20); outtextxy(root->x,root->y,root-
+
+>name); for(i=0;i<root->nc;i++)
+
+{
+
+display(root->link[i]);
+
+}
+
+
+
+}
+
+
+
+}
+
+ 
+
+
+
+
+
+  OUTPUT:
+
+Enter Name of dir/file (under root): ROOT Enter 1 for Dir / 2 For File : 1
+
+No of subdirectories / files (for ROOT) :2 Enter Name of dir/file (under ROOT): USER 1 Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for USER 1): 1 Enter Name of dir/file (under USER 1):SUBDIR Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for SUBDIR):
+
+0	Enter Name of dir/file (under USER 1):JAVA Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for JAVA): 0 Enter Name of dir/file (under SUBDIR):VB Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for VB): 0 Enter Name of dir/file (under ROOT):USER2 Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for USER2): 2 Enter Name of dir/file (under ROOT):A Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under USER2):SUBDIR 2 Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for SUBDIR 2):
+
+2	Enter	Name	of	dir/file	(under SUBDIR2):PPL Enter 1 for Dir /2 for file:1 No of subdirectories /files (for PPL):
+
+
+
+
+
+
+
+
+
+2 Enter Name of dir/file (under
+
+PPL):B Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under PPL):C Enter 1 for Dir /2 for file:2
+
+ 
+
+
+
+Enter Name of dir/file (under SUBDIR):AI Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for AI): 2 Enter Name of dir/file (under AI):D Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under AI):E Enter 1 for Dir /2 for file:2
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.d)Implement DAG File Organization Techniques
+
+#include<stdio.h> #include<conio.h> #include<graphics.h> #include<string.h> struct tree_element
+
+{
+
+char name[20];
+
+int x,y,ftype,lx,rx,nc,level; struct tree_element *link[5];
+
+};
+
+typedef struct tree_element node; typedef struct
+
+{
+
+char from[20]; char to[20];
+
+}link; link L[10]; int nofl;
+
+node * root; void main()
+
+{
+
+int gd=DETECT,gm; root=NULL;
+
+
+
+
+
+create(&root,0,"root",0,639,320); read_links();
+
+clrscr(); initgraph(&gd,&gm,"c:\\tc\\BGI"); draw_link_lines();
+
+display(root); getch(); closegraph();
+
+}
+
+read_links()
+
+{
+
+int i;
+
+printf("how many links"); scanf("%d",&nofl); for(i=0;i<nofl;i++)
+
+{
+
+printf("File/dir:");
+
+ 
+
+
+
+fflush(stdin); gets(L[i].from); printf("user name:"); fflush(stdin); gets(L[i].to);
+
+}
+
+}
+
+draw_link_lines()
+
+{
+
+int i,x1,y1,x2,y2; for(i=0;i<nofl;i++)
+
+{
+
+search(root,L[i].from,&x1,&y1); search(root,L[i].to,&x2,&y2); setcolor(LIGHTGREEN); setlinestyle(3,0,1); line(x1,y1,x2,y2); setcolor(YELLOW); setlinestyle(0,0,1);
+
+}
+
+}
+
+search(node *root,char *s,int *x,int *y)
+
+{
+
+int i; if(root!=NULL)
+
+{
+
+if(strcmpi(root->name,s)==0)
+
+{
+
+ 
+
+
+
+
+
+}
+
+else
+
+{
+
+
+
+}
+
+}
+
+}
+
+ 
+
+*x=root->x;
+
+*y=root->y; return;
+
+
+
+
+
+
+
+
+
+
+
+for(i=0;i<root->nc;i++)
+
+search(root->link[i],s,x,y);
+
+ 
+
+create(node **root,int lev,char *dname,int lx,int rx,int x)
+
+{
+
+int i,gap; if(*root==NULL)
+
+{
+
+(*root)=(node *)malloc(sizeof(node)); printf("enter name of dir/file(under
+
+%s):",dname); fflush(stdin);
+
+gets((*root)->name); printf("enter 1 for dir/ 2 for file:"); scanf("%d",&(*root)-
+
+>ftype); (*root)->level=lev; (*root)->y=50+lev*50; (*root)->x=x;
+
+(*root)->lx=lx; (*root)->rx=rx; for(i=0;i<5;i++)
+
+(*root)->link[i]=NULL; if((*root)->ftype==1)
+
+{
+
+printf("no of sub directories /files (for %s):",(*root)-
+
+>name); scanf("%d",&(*root)->nc);
+
+if((*root)->nc==0)
+
+gap=rx-lx;
+
+ 
+
+
+
+ 
+
+else
+
+ 
+
+
+
+gap=(rx-lx)/(*root)->nc; for(i=0;i<(*root)->nc;i++)
+
+create( & ( (*root)->link[i] ) , lev+1 ,
+
+ 
+
+(*root)->name,lx+gap*i,lx+gap*i+gap,lx+gap*i+gap/2);
+
+}
+
+else
+
+(*root)->nc=0;
+
+}
+
+}
+
+/* displays the constructed tree in graphics mode */ display(node *root)
+
+{
+
+int i; settextstyle(2,0,4); settextjustify(1,1); setfillstyle(1,BLUE); setcolor(14); if(root!=NULL)
+
+{
+
+for(i=0;i<root->nc;i++)
+
+{
+
+line(root->x,root->y,root->link[i]->x,root->link[i]->y);
+
+
+
+}
+
+if(root->ftype==1) bar3d(root->x-20,root->y-10,root-
+
+>x+20,root->y+10,0,0);
+
+else
+
+fillellipse(root->x,root->y,20,20); outtextxy(root->x,root->y,root-
+
+>name); for(i=0;i<root->nc;i++)
+
+{
+
+display(root->link[i]);
+
+}}}
+
+ 
+
+
+
+
+
+OUTPUT:
+
+
+
+Enter Name of dir/file (under root): ROOT Enter 1 for Dir / 2 For File : 1
+
+No of subdirectories / files (for ROOT) :2 Enter Name of dir/file (under ROOT): USER 1 Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for USER 1): 2 Enter Name of dir/file (under USER1): VB Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for VB): 2 Enter Name of dir/file (under VB): A Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under VB): B Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under USER1): C Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under ROOT): USER2 Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for USER2): 1 Enter Name of dir/file (under USER2):JAVA Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for JAVA):2 Enter Name of dir/file (under JAVA):D Enter 1 for Dir /2 for file:2
+
+Enter Name of dir/file (under JAVA):HTML Enter 1 for Dir /2 for file:1
+
+No of subdirectories /files (for HTML):0 How many links:2
+
+File/Dir: B
+
+User Name: USER 2 File/Dir: HTML User Name: USER1
+
+ 
+
+
+
+
+
+7. Implement Bankers Algorithm for Dead Lock Avoidance
+
+#include<stdio.h> int max[100][100]; int alloc[100][100]; int need[100][100]; int avail[100];
+
+int n,r;
+
+void input(); void show(); void cal(); int main()
+
+{
+
+int i,j;
+
+printf("********** Baner's Algorithm ************\n"); 
+
+input();
+
+show();
+
+cal();
+
+       return 0;
+
+}
+
+void input()
+
+{
+
+int i,j;
+
+  printf("Enter the no of Processes\t");
+
+
+
+
+
+scanf("%d",&n);
+
+printf("Enter the no of resources instances\t"); scanf("%d",&r);
+
+printf("Enter the Max Matrix\n"); for(i=0;i<n;i++)
+
+{
+
+for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&max[i][j]);
+
+}
+
+}
+
+printf("Enter the Allocation Matrix\n"); for(i=0;i<n;i++)
+
+{
+
+for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&alloc[i][j]);
+
+}
+
+}
+
+printf("Enter the available Resources\n"); for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&avail[j]);
+
+}
+
+}
+
+void show()
+
+{
+
+int i,j;
+
+printf("Process\t Allocation\t Max\t Available\t"); for(i=0;i<n;i++)
+
+{
+
+printf("\nP%d\t ",i+1); for(j=0;j<r;j++)
+
+{
+
+printf("%d ",alloc[i][j]);
+
+}
+
+printf("\t"); for(j=0;j<r;j++)
+
+{
+
+printf("%d ",max[i][j]);
+
+}
+
+printf("\t"); if(i==0)
+
+{
+
+for(j=0;j<r;j++) printf("%d ",avail[j]);
+
+}
+
+}
+
+}
+
+void cal()
+
+{
+
+int finish[100],temp,need[100][100],flag=1,k,c1=0; int safe[100];
+
+int i,j; for(i=0;i<n;i++)
+
+{
+
+finish[i]=0;
+
+}
+
+//find need matrix for(i=0;i<n;i++)
+
+{
+
+for(j=0;j<r;j++)
+
+{
+
+need[i][j]=max[i][j]-alloc[i][j];
+
+}}
+
+printf("\n"); while(flag)
+
+{
+
+flag=0; for(i=0;i<n;i++)
+
+{
+
+int c=0; for(j=0;j<r;j++)
+
+{
+
+if((finish[i]==0)&&(need[i][j]<=avail[j]))
+
+{ c++;
+
+if(c==r)
+
+{
+
+for(k=0;k<r;k++)
+
+{
+
+avail[k]+=alloc[i][j]; finish[i]=1;
+
+flag=1;
+
+}
+
+printf("P%d->",i); if(finish[i]==1)
+
+{
+
+i=n;
+
+}
+
+}
+
+
+
+
+
+}
+
+}
+
+}
+
+}
+
+for(i=0;i<n;i++)
+
+{
+
+if(finish[i]==1)
+
+{ c1++;
+
+}
+
+else
+
+{
+
+printf("P%d->",i);
+
+}
+
+}
+
+if(c1==n)
+
+{
+
+printf("\n The system is in safe state");
+
+}
+
+else
+
+{
+
+printf("\n Process are in dead lock"); printf("\n System is in unsafe state");
+
+}
+
+}
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+
+
+
+8. Implement an Algorithm for Dead Lock Detection	
+
+
+
+#include<stdio.h> #include<conio.h> int max[100][100]; int alloc[100][100]; int need[100][100]; int avail[100];
+
+int n,r;
+
+void input(); void show(); void cal(); int main()
+
+{
+
+int i,j;
+
+printf("********** Deadlock Detection Algo ************\n"); input();
+
+show();
+
+cal();
+
+getch(); return 0;
+
+}
+
+void input()
+
+{int i,j;
+
+printf("Enter the no of Processes\t");
+
+ scanf("%d",&n);
+
+printf("Enter the no of resource instances\t"); scanf("%d",&r);
+
+printf("Enter the Max Matrix\n"); for(i=0;i<n;i++)
+
+{for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&max[i][j]);
+
+}}
+
+printf("Enter the Allocation Matrix\n"); for(i=0;i<n;i++)
+
+{for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&alloc[i][j]);
+
+}}
+
+printf("Enter the available Resources\n"); for(j=0;j<r;j++)
+
+{
+
+scanf("%d",&avail[j]);
+
+}}
+
+void show()
+
+{
+
+int i,j;
+
+printf("Process\t Allocation\t Max\t Available\t"); for(i=0;i<n;i++)
+
+{
+
+printf("\nP%d\t ",i+1); for(j=0;j<r;j++)
+
+{
+
+printf("%d ",alloc[i][j]);
+
+}
+
+printf("\t"); for(j=0;j<r;j++)
+
+{printf("%d ",max[i][j]);
+
+}
+
+printf("\t"); if(i==0)
+
+{
+
+for(j=0;j<r;j++) printf("%d ",avail[j]);
+
+}}}
+
+void cal()
+
+{ int finish[100],temp,need[100][100],flag=1,k,c1=0; int dead[100];
+
+int safe[100]; int i,j;
+
+for(i=0;i<n;i++)
+
+{finish[i]=0;
+
+}
+
+//find need matrix for(i=0;i<n;i++)
+
+{for(j=0;j<r;j++)
+
+{
+
+need[i][j]=max[i][j]-alloc[i][j];
+
+}}
+
+while(flag)
+
+{flag=0; for(i=0;i<n;i++)
+
+{int c=0; for(j=0;j<r;j++)
+
+{if((finish[i]==0)&&(need[i][j]<=avail[j]))
+
+{c++;
+
+if(c==r)
+
+{
+
+for(k=0;k<r;k++)
+
+{avail[k]+=alloc[i][j]; finish[i]=1;
+
+flag=1;
+
+}//printf("\nP%d",i); if(finish[i]==1)
+
+{i=n;
+
+}}}}}} j=0;
+
+flag=0; for(i=0;i<n;i++)
+
+{
+
+if(finish[i]==0)
+
+{dead[j]=i; j++;
+
+flag=1;
+
+}}
+
+if(flag==1)
+
+{
+
+printf("\n\nSystem is in Deadlock and the Deadlock process are\n"); for(i=0;i<n;i++)
+
+{printf("P%d\t",dead[i]);
+
+}}
+
+else
+
+{
+
+printf("\nNo Deadlock Occur"); }}
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Output
+
+
+
+$ ./detect
+
+********** Deadlock Detection Algo ************
+
+Enter the no of Processes
+
+3
+
+Enter the no of resource instances
+
+4
+
+Enter the Max Matrix
+
+2   3  5  3
+
+3  2  5  6
+
+2  6  4  8
+
+Enter the Allocation Matrix
+
+1   2   4  2
+
+2  1   4  4
+
+1  5  4  7
+
+Enter the available Resources
+
+1   2  1  4
+
+Process  Allocation      Max     Available
+
+P1       1 2 4 2        2 3 5 3         1 2 1 4
+
+P2       2 1 4 4        3 2 5 6
+
+P3       1 5 4 7        2 6 4 8
+
+No Deadlock Occur
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9.a)Implement FIFO page replacement algorithms	
+
+#include<stdio.h>
+
+int main()
+
+{
+
+int i=0,j=0,k=0,i1=0,m,n,rs[30],flag=1,p[30];
+
+printf("FIFO page replacement algorithm\n");
+
+printf("enter the no. of frames:");
+
+scanf("%d",&n);
+
+printf("enter the reference string:");
+
+ while(1)
+
+{
+
+scanf("%d",&rs[i]);
+
+if(rs[i]==0)
+
+break;
+
+ i++;
+
+}
+
+m=i;
+
+ for(j=0;j<n;j++)
+
+p[j]=0;
+
+ for(i=0;i<m;i++)
+
+{
+
+flag=1;
+
+for(j=0;j<n;j++)
+
+ if(p[j]==rs[i])
+
+{
+
+printf("data already in page    \n");
+
+flag=0;
+
+ break;
+
+}
+
+if(flag==1)
+
+{
+
+p[i1]=rs[i];
+
+ i1++;
+
+k++;
+
+if(i1==n)
+
+i1=0;
+
+for(j=0;j<n;j++)
+
+{
+
+printf("\n page %d:%d",j+1,p[j]);
+
+if(p[j]==rs[i])
+
+printf("*");
+
+}
+
+printf("\n\n");
+
+}
+
+}
+
+printf("total no page faults=%d",k);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+output
+
+
+
+$ ./fifo
+
+FIFO page replacement algorithm
+
+enter the no. of frames:
+
+3
+
+enter the reference string:
+
+1
+
+2
+
+1
+
+3
+
+1
+
+2
+
+0
+
+
+
+ page 1:1*
+
+ page 2:0
+
+ page 3:0
+
+
+
+
+
+ page 1:1
+
+ page 2:2*
+
+ page 3:0
+
+
+
+data already in page
+
+
+
+ page 1:1
+
+ page 2:2
+
+ page 3:3*
+
+
+
+data already in page
+
+data already in page
+
+total no page faults=3	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9.b)Implement LRU page replacement algorithms	
+
+
+
+
+
+
+
+#include<stdio.h> main()
+
+{
+
+int q[20],p[50],c=0,c1,d,f,i,j,k=0,n,r,t,b[20],c2[20]; printf("Enter no of pages:");
+
+scanf("%d",&n);
+
+printf("Enter the reference string:"); for(i=0;i<n;i++) scanf("%d",&p[i]);
+
+printf("Enter no of frames:"); scanf("%d",&f);
+
+q[k]=p[k]; printf("\n\t%d\n",q[k]); c++;
+
+k++;
+
+for(i=1;i<n;i++)
+
+{ c1=0;
+
+for(j=0;j<f;j++)
+
+{
+
+if(p[i]!=q[j])
+
+ c1++;
+
+}
+
+if(c1==f)
+
+{c++;
+
+if(k<f)
+
+{q[k]=p[i]; k++;
+
+for(j=0;j<k;j++) printf("\t%d",q[j]); printf("\n");
+
+}
+
+else
+
+{for(r=0;r<f;r++)
+
+{c2[r]=0;
+
+for(j=i-1;j<n;j--)
+
+{if(q[r]!=p[j]) c2[r]++;
+
+else break;
+
+}}
+
+for(r=0;r<f;r++) b[r]=c2[r]; for(r=0;r<f;r++)
+
+{
+
+for(j=r;j<f;j++)
+
+{
+
+if(b[r]<b[j])
+
+{	
+
+t=b[r]; b[r]=b[j]; b[j]=t;
+
+}}}
+
+for(r=0;r<f;r++)
+
+{
+
+if(c2[r]==b[0])
+
+q[r]=p[i]; printf("\t%d",q[r]);
+
+}
+
+printf("\n");
+
+}}}
+
+printf("\nThe no of page faults is %d",c);
+
+}	
+
+
+
+Output
+
+
+
+$ ./lru
+
+Enter no of pages:
+
+5
+
+Enter the reference string:
+
+1
+
+2
+
+3
+
+6
+
+2
+
+Enter no of frames:3
+
+
+
+        1
+
+        1       2
+
+        1       2       3
+
+        6       2       3
+
+
+
+The no of page faults is 4
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+9.c)Implement LFU page replacement algorithms	
+
+
+
+#include<stdio.h> int main()
+
+{
+
+int f,p;
+
+int pages[50],frame[10],hit=0,count[50],time[50]; int i,j,page,flag,least,minTime,temp;
+
+printf("Enter no of frames : "); scanf("%d",&f);
+
+printf("Enter no of pages : "); scanf("%d",&p); for(i=0;i<f;i++)
+
+{
+
+frame[i]=-1;
+
+}
+
+for(i=0;i<50;i++)
+
+{
+
+count[i]=0;
+
+}
+
+printf("Enter page no : \n"); for(i=0;i<p;i++)
+
+{	
+
+scanf("%d",&pages[i]);
+
+}
+
+printf("\n"); for(i=0;i<p;i++)
+
+{
+
+count[pages[i]]++; time[pages[i]]=i; flag=1; least=frame[0]; for(j=0;j<f;j++)
+
+{
+
+if(frame[j]==-1 || frame[j]==pages[i])
+
+{
+
+if(frame[j]!=-1)
+
+{
+
+hit++;
+
+}
+
+flag=0; frame[j]=pages[i]; break;
+
+}
+
+if(count[least]>count[frame[j]])
+
+{
+
+least=frame[j];
+
+}
+
+}
+
+if(flag)
+
+{
+
+minTime=50; for(j=0;j<f;j++)
+
+{
+
+if(count[frame[j]]==count[least] && time[frame[j]]<minTime)
+
+{
+
+temp=j; minTime=time[frame[j]];
+
+}
+
+}
+
+count[frame[temp]]=0; frame[temp]=pages[i];
+
+}
+
+for(j=0;j<f;j++)
+
+{
+
+printf("%d ",frame[j]);
+
+}
+
+printf("\n");
+
+}
+
+printf("Page hit = %d",hit); return 0;
+
+}
+
+Output
+
+
+
+$ ./plfu
+
+Enter no of frames : 3
+
+Enter no of pages : 4
+
+Enter page no :
+
+1
+
+2
+
+3
+
+4
+
+
+
+1 -1 -1
+
+1 2 -1
+
+1 2 3
+
+4 2 3
+
+Page hit = 0
+
+
+
+
+
+
+
+10.	Implement Shared memory and IPC
+
+
+
+#include<stdio.h>  
+
+#include<stdlib.h>  
+
+#include<unistd.h>  
+
+#include<sys/shm.h>  
+
+#include<string.h>  
+
+int main()  
+
+{  
+
+int i;  
+
+void *shared_memory;  
+
+char buff[100];  
+
+int shmid;  
+
+shmid=shmget((key_t)2345, 1024, 0666|IPC_CREAT);   
+
+printf("Key of shared memory is %d\n",shmid);  
+
+shared_memory=shmat(shmid,NULL,0);   
+
+printf("Process attached at %p\n",shared_memory);   
+
+printf("Enter some data to write to shared memory\n");  
+
+read(0,buff,100);   
+
+strcpy(shared_memory,buff);   
+
+printf("You wrote : %s\n",(char *)shared_memory);  
+
+}  	
+
+
+
+Output
+
+Key of shared memory is 0
+
+Process attached at 0x7ffe040fb00
+
+Enter some data to write to shared memory
+
+Hello
+
+You wrote hello
+
+
+
+	
+
+	11.Implement Paging Technique of memory management.
+
+#include<stdio.h>
+
+
+
+main()
+
+{
+
+ int ms, ps, nop, np, rempages, i, j, x, y, pa, offset;
+
+ int s[10], fno[10][20];
+
+
+
+clrscr();
+
+
+
+printf("\nEnter the memory size -- ");
+
+scanf("%d",&ms);
+
+
+
+printf("\nEnter the page size -- ");
+
+scanf("%d",&ps);
+
+
+
+nop = ms/ps;
+
+printf("\nThe no. of pages available in memory are -- %d ",nop);
+
+
+
+printf("\nEnter number of processes -- ");
+
+ scanf("%d",&np);
+
+rempages = nop;
+
+for(i=1;i<=np;i++)
+
+
+
+{
+
+
+
+printf("\nEnter no. of pages required for p[%d]-- ",i);
+
+ scanf("%d",&s[i]);
+
+
+
+if(s[i] >rempages)
+
+{
+
+
+
+printf("\nMemory is Full");
+
+break;
+
+}
+
+rempages = rempages - s[i];
+
+
+
+printf("\nEnter pagetable for p[%d] --- ",i);
+
+ for(j=0;j<s[i];j++)
+
+scanf("%d",&fno[i][j]);
+
+}
+
+
+
+printf("\nEnter Logical Address to find Physical Address ");
+
+printf("\nEnter process no. and pagenumber and offset -- ");
+
+
+
+scanf("%d %d %d",&x,&y, &offset);
+
+
+
+
+
+
+
+if(x>np || y>=s[i] || offset>=ps)
+
+printf("\nInvalid Process or Page Number or offset");
+
+
+
+else
+
+{ pa=fno[x][y]*ps+offset;
+
+printf("\nThe Physical Address is -- %d",pa);
+
+
+
+}
+
+getch();
+
+}
+
+
+
+
+
+
+
+
+
+output
+
+
+
+$ ./pt
+
+
+
+Enter the memory size -- 1000
+
+
+
+Enter the page size -- 100
+
+
+
+The no. of pages available in memory are -- 10
+
+Enter number of processes --
+
+3
+
+
+
+Enter no. of pages required for p[1]--
+
+4
+
+
+
+Enter pagetable for p[1] ---
+
+8
+
+6
+
+9
+
+5
+
+
+
+Enter no. of pages required for p[2]--
+
+5
+
+
+
+Enter pagetable for p[2] --- 1
+
+5
+
+4
+
+7
+
+3
+
+
+
+Enter no. of pages required for p[3]—5
+
+
+
+Output
+
+
+
+Memory is Full
+
+Enter Logical Address to find Physical Address
+
+Enter process no. and pagenumber and offset -- 2
+
+3
+
+60
+
+
+
+The Physical Address is – 760
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12. Implement Threading & Synchronization Applications.	
+
+#include <stdio.h>
+
+#include <stdlib.h>
+
+#include <pthread.h>
+
+#include <unistd.h>
+
+volatile long int a = 0;
+
+pthread_mutex_t aLock;
+
+
+
+void threadFunc()
+
+{
+
+    int i;
+
+
+
+    for (i = 1; i < 200000 ; i++)
+
+    {
+
+        a = a + 1;
+
+    }
+
+}
+
+void threadFunc2()
+
+{
+
+    int i;
+
+    for(i = 200000; i <= 500000; i++)
+
+    {
+
+        a = a + i;
+
+    }
+
+}
+
+int main()
+
+{
+
+    pthread_t th_one, th_two;
+
+    int i;
+
+    a = 0;
+
+    pthread_create(&th_one, NULL, (void*)&threadFunc, NULL);  
+
+    pthread_create(&th_two, NULL, (void*)&threadFunc2, NULL);                                                                                                                                               
+
+    pthread_join(th_one, NULL);                                                                                                                                          
+
+    pthread_join(th_two, NULL);                                                                                                                                                  
+
+    printf("%ld\n",a);
+
+    return 0;
+
+}
+
+
+
+
+
+
+
+
+
+Output
+
+$ ./thread
+
+93345191968
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+ 
+
+	
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Output	
+
+********** Baner's Algo ************
+
+Enter the no of Processes
+
+3
+
+Enter the no of resources instances
+
+4
+
+Enter the Max Matrix
+
+1
+
+1
+
+1
+
+2
+
+3
+
+1
+
+7
+
+6
+
+2
+
+4
+
+3
+
+5
+
+Enter the Allocation Matrix
+
+1
+
+2
+
+1
+
+1
+
+1
+
+1
+
+5
+
+2
+
+3
+
+1
+
+2
+
+3
+
+Enter the available Resources
+
+2
+
+7
+
+3
+
+8
+
+Process  Allocation      Max     Available
+
+P1       1 2 1 1        1 1 1 2         2 7 3 8
+
+P2       1 1 5 2        3 1 7 6
+
+P3       3 1 2 3        2 4 3 5
+
+P0->P1->P2->
+
+
+
+The system is in safe state
+
+
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+
+
+
+
+
+1.	Implement an Algorithm for Dead Lock Detection
+
+
+
+
+
+
+
