@@ -1,0 +1,19 @@
+Application for Email Registration and Login using PHP 
+EX NO:08 
+and MySQL 
+DATE: 
+AIM:  
+To Create a program Application for E-mail Registration & Login using PHP & Mysql 
+PROCEDURE: 
+STEP 1: Start the Program 
+STEP 2: Create a Database table,Table name as user inside your Mysql 
+STEP 3: After Creating Table we need to create a PHP Script in order to connect 
+to the Mysql database server 
+STEP 4: Create another PHP file register.php & create a web form that allows 
+user to register 
+STEP 5: Check input errors before inserting in database 
+STEP 6: Creates a password hash & attempt to execute the prepared 
+statement 
+ STEP 7: Check conform password 
+STEP 8: Display already have an account  
+STEP 9: Stop the program. 
